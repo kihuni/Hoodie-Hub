@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HoodieHub{% endblock %}</title>
+    {% load static %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
+        body { font-family: 'Segoe UI', system-ui, sans-serif; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-950 text-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-4 md:py-5 flex justify-between items-center">
+            <a href="{% url 'hoodieHub:home' %}" class="text-lg md:text-2xl font-bold hover:text-gray-100 transition">🎽 HoodieHub</a>
+            <a href="{% url 'hoodieHub:view_cart' %}" class="relative text-xl md:text-2xl hover:text-gray-100 transition active:scale-95">
+                🛒
+                <span class="absolute -top-2 -right-3 bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold" id="cartBadge">
+                    0
+                </span>
+            </a>
+        </div>
+    </header>
+    
+    {% block content %}{% endblock %}
+    
+    <script>
+        // Update cart badge on page load and periodically
+        async function updateCartBadge() {
+            try {
+                const response = await fetch('{% url "hoodieHub:get_cart_data" %}');
+                const data = await response.json();
+                document.getElementById('cartBadge').textContent = data.item_count;
+            } catch (error) {
+                console.error('Error updating cart badge:', error);
+            }
+        }
+        
+        // Update on page load
+        document.addEventListener('DOMContentLoaded', updateCartBadge);
+        
+        // Update every 2 seconds to reflect changes
+        setInterval(updateCartBadge, 2000);
+        
+        // Global function to update cart badge immediately after adding items
+        window.updateCartBadgeImmediately = updateCartBadge;
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

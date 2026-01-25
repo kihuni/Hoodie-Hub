@@ -1,0 +1,122 @@
+{% extends 'hoodieHub/base.html' %}
+
+{% block title %}Checkout - HoodieHub{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12 bg-gray-950 min-h-screen">
+    <h1 class="text-2xl md:text-4xl font-bold text-white mb-6 md:mb-8"> 🇰🇪 Lipa na Mpesa</h1>
+    
+    <!-- Order Summary -->
+    <div class="bg-gray-900 rounded-xl shadow-lg p-4 md:p-8 mb-6 md:mb-8 border border-gray-800">
+        <h2 class="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Order Summary</h2>
+        <div class="bg-gray-800 p-4 md:p-6 rounded-lg border border-gray-700">
+            {% for item in cart.items.all %}
+            <div class="flex flex-col md:flex-row md:justify-between py-3 border-b border-gray-700 gap-2">
+                <div class="text-sm md:text-base text-gray-300">
+                    <strong>{{ item.hoodie.name }}</strong> <span class="text-gray-500">({{ item.size }}) × {{ item.quantity }}</span>
+                </div>
+                <div class="text-gray-300 font-semibold">KES {{ item.get_subtotal|floatformat:2 }}</div>
+            </div>
+            {% endfor %}
+            
+            <div class="flex flex-col md:flex-row md:justify-between pt-4 border-t-2 border-gray-700 text-xl md:text-2xl font-bold gap-2">
+                <div class="text-white">Total</div>
+                <div class="text-purple-400">KES {{ cart.get_total|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delivery Form -->
+    <div class="bg-gray-900 rounded-xl shadow-lg p-4 md:p-8 border border-gray-800">
+        <h2 class="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Delivery Information</h2>
+        
+        <form id="checkoutForm" class="space-y-4 md:space-y-5">
+            {% csrf_token %}
+            
+            <div>
+                <label for="customer_name" class="block text-xs md:text-sm font-bold text-gray-300 mb-2">Full Name *</label>
+                <input type="text" id="customer_name" name="customer_name" required class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500">
+            </div>
+            
+            <div>
+                <label for="phone_number" class="block text-xs md:text-sm font-bold text-gray-300 mb-2">M-Pesa Phone Number *</label>
+                <input type="tel" id="phone_number" name="phone_number" placeholder="0712345678" required pattern="[0-9]{10}" class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500">
+                <p class="text-xs text-gray-500 mt-2">Enter the number you'll use to pay</p>
+            </div>
+            
+            <div>
+                <label for="delivery_location" class="block text-xs md:text-sm font-bold text-gray-300 mb-2">Delivery Location *</label>
+                <textarea id="delivery_location" name="delivery_location" rows="4" placeholder="Enter your full delivery address" required class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition resize-none text-sm md:text-base bg-gray-800 text-white placeholder-gray-500"></textarea>
+            </div>
+            
+            <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg transition transform hover:scale-105 active:scale-95 text-xs md:text-lg" id="payBtn">
+                🇰🇪 Pay KES {{ cart.get_total|floatformat:2 }} with M-Pesa
+            </button>
+        </form>
+        
+        <div class="loading hidden" id="loading">
+            <div class="text-center mt-8">
+                <div class="inline-block">
+                    <div class="w-12 h-12 border-4 border-gray-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <p class="text-gray-700 font-semibold">Processing payment... Please check your phone 📱</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const form = document.getElementById('checkoutForm');
+const payBtn = document.getElementById('payBtn');
+const loading = document.getElementById('loading');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    payBtn.disabled = true;
+    loading.classList.remove('hidden');
+    
+    const formData = new FormData(form);
+    
+    try {
+        const response = await fetch('{% url "hoodieHub:process_checkout" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Redirect to order confirmation
+            window.location.href = `/order/${data.order_id}/`;
+        } else {
+            alert(data.message);
+            loading.classList.add('hidden');
+            payBtn.disabled = false;
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again.');
+        loading.classList.add('hidden');
+        payBtn.disabled = false;
+    }
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}
