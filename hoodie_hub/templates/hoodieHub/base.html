@@ -29,7 +29,7 @@
     {% block content %}{% endblock %}
     
     <script>
-        // Update cart badge on page load and periodically
+        // Update cart badge on page load only
         async function updateCartBadge() {
             try {
                 const response = await fetch('{% url "hoodieHub:get_cart_data" %}');
@@ -42,9 +42,6 @@
         
         // Update on page load
         document.addEventListener('DOMContentLoaded', updateCartBadge);
-        
-        // Update every 2 seconds to reflect changes
-        setInterval(updateCartBadge, 2000);
         
         // Global function to update cart badge immediately after adding items
         window.updateCartBadgeImmediately = updateCartBadge;
