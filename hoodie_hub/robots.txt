@@ -1,0 +1,40 @@
+# HoodieHub - Search Engine Optimization
+# This robots.txt file guides search engine crawlers
+
+User-agent: *
+Allow: /
+Allow: /admin/
+Disallow: /admin/login/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /order/*/
+Disallow: /mpesa/
+Disallow: /payments/
+Disallow: /*.json$
+Disallow: /?*sort=
+Disallow: /?*filter=
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Allow: /admin/
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Allow: /admin/
+Crawl-delay: 2
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Disallow bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+# Sitemap location
+Sitemap: https://hoodieHub.com/sitemap.xml

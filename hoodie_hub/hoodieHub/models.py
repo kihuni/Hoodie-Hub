@@ -1,6 +1,22 @@
 from datetime import datetime
 from django.db import models
+from django.contrib.auth.models import User
 import uuid
+
+class UserProfile(models.Model):
+    """Extended user profile for additional customer information"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    phone_number = models.CharField(max_length=15, blank=True)
+    delivery_location = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.user.get_full_name() or self.user.username}'s Profile"
+    
+    class Meta:
+        ordering = ['-created_at']
+
 
 class Hoodie(models.Model):
     SIZE_CHOICES = [
@@ -33,11 +49,14 @@ class Hoodie(models.Model):
 
 class Cart(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    session_key = models.CharField(max_length=100, unique=True)
+    session_key = models.CharField(max_length=100, unique=True, null=True, blank=True)  # Only for guest carts
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart', null=True, blank=True)  # Optional user association
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
+        if self.user:
+            return f"Cart for {self.user.username}"
         return f"Cart {self.session_key}"
     
     def get_total(self):
@@ -71,9 +90,11 @@ class Order(models.Model):
         ('PAID', 'Paid'),
         ('FAILED', 'Failed'),
         ('FULFILLED', 'Fulfilled'),
+        ('CANCELLED', 'Cancelled'),
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='orders', null=True, blank=True)  # Optional user association
     customer_name = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=15)
     delivery_location = models.TextField()
@@ -107,4 +128,7 @@ class OrderItem(models.Model):
         return f"{self.quantity}x {self.hoodie_name} ({self.size})"
     
     def get_subtotal(self):
+        # Handle None values safely
+        if self.price is None or self.quantity is None:
+            return 0
         return self.price * self.quantity

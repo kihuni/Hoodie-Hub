@@ -9,15 +9,15 @@
 <body class="bg-gray-50">
     <!-- Header -->
     <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-                <a href="/" class="text-lg md:text-3xl font-bold flex items-center gap-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <a href="/" class="text-2xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2">
                     🎽 HoodieHub
                 </a>
-                <nav class="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 text-sm md:text-base">
+                <nav class="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-6 text-sm md:text-base">
                     <a href="{% url 'hoodieHub:home' %}" class="hover:text-blue-200 transition font-semibold active:scale-95">Shop</a>
                     <a href="{% url 'hoodieHub:view_cart' %}" class="hover:text-blue-200 transition font-semibold active:scale-95">Cart</a>
-                    <a href="{% url 'payments:payment_form' %}" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-semibold transition active:scale-95">Make Payment</a>
+                    <a href="{% url 'payments:payment_form' %}" class="bg-green-500 hover:bg-green-600 px-5 py-2 md:py-3 rounded-lg font-semibold transition active:scale-95 inline-block text-center">Make Payment</a>
                 </nav>
             </div>
         </div>
@@ -29,25 +29,25 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 mt-12 md:mt-16 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8">
+    <footer class="bg-gray-900 text-gray-400 mt-12 md:mt-16 lg:mt-20 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 mb-8">
                 <div>
-                    <h3 class="text-white font-bold text-lg mb-3 md:mb-4">🎽 HoodieHub</h3>
-                    <p class="text-xs md:text-sm">Your one-stop shop for premium quality hoodies. Free shipping on all orders.</p>
+                    <h3 class="text-white font-bold text-xl md:text-2xl mb-3 md:mb-4">🎽 HoodieHub</h3>
+                    <p class="text-xs sm:text-sm md:text-base">Your one-stop shop for premium quality hoodies. Free shipping on all orders.</p>
                 </div>
                 <div>
-                    <h4 class="text-white font-bold mb-3 md:mb-4 text-sm md:text-base">Quick Links</h4>
-                    <ul class="space-y-2 text-xs md:text-sm">
+                    <h4 class="text-white font-bold mb-4 md:mb-5 text-sm md:text-lg">Quick Links</h4>
+                    <ul class="space-y-2 md:space-y-3 text-xs sm:text-sm md:text-base">
                         <li><a href="{% url 'hoodieHub:home' %}" class="hover:text-white transition">Shop</a></li>
                         <li><a href="{% url 'hoodieHub:view_cart' %}" class="hover:text-white transition">Cart</a></li>
                         <li><a href="{% url 'payments:payment_form' %}" class="hover:text-white transition">Payments</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-bold mb-3 md:mb-4 text-sm md:text-base">Contact</h4>
-                    <p class="text-xs md:text-sm">Email: support@hoodiehub.com</p>
-                    <p class="text-xs md:text-sm">Phone: +254 712 345 678</p>
+                    <h4 class="text-white font-bold mb-4 md:mb-5 text-sm md:text-lg">Contact</h4>
+                    <p class="text-xs sm:text-sm md:text-base">Email: support@hoodiehub.com</p>
+                    <p class="text-xs sm:text-sm md:text-base">Phone: +254 712 345 678</p>
                 </div>
             </div>
             <div class="border-t border-gray-800 pt-6 md:pt-8 text-center text-xs md:text-sm">

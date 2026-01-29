@@ -1,0 +1,185 @@
+{% extends 'hoodieHub/base.html' %}
+
+{% block title %}Order Details - HoodieHub{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16 bg-gray-950 min-h-screen">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white">Order Details</h1>
+        <a href="{% url 'hoodieHub:user_profile' %}" class="text-gray-400 hover:text-gray-200 transition">← Back</a>
+    </div>
+    
+    <!-- Messages -->
+    {% if success %}
+    <div class="bg-green-900 border-l-4 border-green-500 p-4 rounded mb-6 text-green-300 text-sm font-semibold">
+        {{ success }}
+    </div>
+    {% endif %}
+    
+    {% if error %}
+    <div class="bg-red-900 border-l-4 border-red-500 p-4 rounded mb-6 text-red-300 text-sm font-semibold">
+        {{ error }}
+    </div>
+    {% endif %}
+    
+    <!-- Order Info Card -->
+    <div class="bg-gray-900 rounded-xl shadow-lg p-6 md:p-10 border border-gray-800 mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-700">
+            <div>
+                <p class="text-sm text-gray-400 mb-2">Order Number</p>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white font-mono">{{ order.id|truncatechars:20 }}</h2>
+            </div>
+            
+            <!-- Status Badge -->
+            <div class="flex flex-col items-start sm:items-end">
+                <p class="text-xs text-gray-400 mb-2">Status</p>
+                {% if order.status == 'PENDING' %}
+                    <span class="px-4 py-2 bg-yellow-900 border border-yellow-600 text-yellow-300 rounded-full font-bold flex items-center gap-2">
+                        <span class="animate-pulse">⏳</span> Pending
+                    </span>
+                {% elif order.status == 'PAID' %}
+                    <span class="px-4 py-2 bg-blue-900 border border-blue-600 text-blue-300 rounded-full font-bold flex items-center gap-2">
+                        ✓ Paid
+                    </span>
+                {% elif order.status == 'FULFILLED' %}
+                    <span class="px-4 py-2 bg-green-900 border border-green-600 text-green-300 rounded-full font-bold flex items-center gap-2">
+                        ✓✓ Delivered
+                    </span>
+                {% elif order.status == 'CANCELLED' %}
+                    <span class="px-4 py-2 bg-red-900 border border-red-600 text-red-300 rounded-full font-bold flex items-center gap-2">
+                        ✗ Cancelled
+                    </span>
+                {% elif order.status == 'FAILED' %}
+                    <span class="px-4 py-2 bg-red-900 border border-red-600 text-red-300 rounded-full font-bold flex items-center gap-2">
+                        ✗ Failed
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Order Timeline -->
+        <div class="mb-8">
+            <p class="text-sm text-gray-400 font-bold mb-4">Order Progress</p>
+            <div class="flex justify-between relative">
+                <!-- Step 1: Pending -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm {% if order.status in 'PENDING,PAID,FULFILLED' %}bg-yellow-600 text-yellow-100{% else %}bg-gray-700 text-gray-400{% endif %}">
+                        1
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3 text-center">Order<br>Placed</p>
+                </div>
+                
+                <!-- Step 2: Paid -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm {% if order.status in 'PAID,FULFILLED' %}bg-blue-600 text-blue-100{% else %}bg-gray-700 text-gray-400{% endif %}">
+                        2
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3 text-center">Payment<br>Confirmed</p>
+                </div>
+                
+                <!-- Step 3: Fulfilled -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm {% if order.status == 'FULFILLED' %}bg-green-600 text-green-100{% else %}bg-gray-700 text-gray-400{% endif %}">
+                        3
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3 text-center">Order<br>Delivered</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Key Details -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            <div>
+                <p class="text-xs text-gray-400 font-bold mb-2">Order Date</p>
+                <p class="text-sm md:text-base text-gray-200">{{ order.created_at|date:"M d, Y H:i" }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 font-bold mb-2">Total Amount</p>
+                <p class="text-lg md:text-xl font-bold text-green-400">KES {{ order.total_amount|floatformat:2 }}</p>
+            </div>
+            {% if order.mpesa_receipt_number %}
+            <div>
+                <p class="text-xs text-gray-400 font-bold mb-2">M-Pesa Receipt</p>
+                <p class="text-sm md:text-base text-gray-200 font-mono">{{ order.mpesa_receipt_number }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Delivery Information -->
+    <div class="bg-gray-900 rounded-xl shadow-lg p-6 md:p-10 border border-gray-800 mb-8">
+        <h3 class="text-xl sm:text-2xl font-bold text-white mb-6">📍 Delivery Information</h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+                <p class="text-xs text-gray-400 font-bold mb-2">Recipient Name</p>
+                <p class="text-sm md:text-base text-gray-200">{{ order.customer_name }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 font-bold mb-2">Phone Number</p>
+                <p class="text-sm md:text-base text-gray-200">{{ order.phone_number }}</p>
+            </div>
+            <div class="sm:col-span-2">
+                <p class="text-xs text-gray-400 font-bold mb-2">Delivery Location</p>
+                <p class="text-sm md:text-base text-gray-200">{{ order.delivery_location }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Items -->
+    <div class="bg-gray-900 rounded-xl shadow-lg p-6 md:p-10 border border-gray-800 mb-8">
+        <h3 class="text-xl sm:text-2xl font-bold text-white mb-6">📦 Order Items</h3>
+        
+        <div class="space-y-4">
+            {% for item in order.items.all %}
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-gray-800 rounded-lg border border-gray-700">
+                    <div>
+                        <p class="font-bold text-white">{{ item.hoodie_name }}</p>
+                        <p class="text-sm text-gray-400">Size: <span class="font-mono">{{ item.size }}</span> | Quantity: {{ item.quantity }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-lg font-bold text-green-400">KES {{ item.price|floatformat:2 }}</p>
+                        <p class="text-xs text-gray-400">Subtotal: KES {{ item.get_subtotal|floatformat:2 }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Order Total -->
+        <div class="mt-6 pt-6 border-t border-gray-700">
+            <div class="flex justify-between items-center">
+                <p class="text-lg font-bold text-white">Total:</p>
+                <p class="text-2xl font-bold text-green-400">KES {{ order.total_amount|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Actions -->
+    {% if order.status == 'PENDING' %}
+    <div class="bg-yellow-900 border-l-4 border-yellow-600 p-6 rounded-xl mb-8">
+        <p class="text-yellow-300 mb-4">This order is still pending payment. You can cancel it if you no longer need it.</p>
+        <form method="POST" class="flex flex-col sm:flex-row gap-3">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="cancel">
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition" onclick="return confirm('Are you sure you want to cancel this order?')">
+                Cancel Order
+            </button>
+            <a href="{% url 'hoodieHub:checkout' %}" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition text-center">
+                Proceed to Payment
+            </a>
+        </form>
+    </div>
+    {% endif %}
+    
+    <!-- Footer Actions -->
+    <div class="flex flex-col sm:flex-row gap-3">
+        <a href="{% url 'hoodieHub:user_profile' %}" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition text-center">
+            Back to Profile
+        </a>
+        <a href="{% url 'hoodieHub:home' %}" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition text-center">
+            Continue Shopping
+        </a>
+    </div>
+</div>
+{% endblock %}

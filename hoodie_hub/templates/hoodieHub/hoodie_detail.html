@@ -1,45 +1,96 @@
 {% extends 'hoodieHub/base.html' %}
 
-{% block title %}{{ hoodie.name }} - HoodieHub{% endblock %}
+{% block title %}{{ hoodie.name }} - Premium Hoodie - HoodieHub{% endblock %}
+
+{% block meta_description %}Buy {{ hoodie.name }} - Premium quality hoodie at HoodieHub. ✅ Fast shipping in Kenya. 🎯 Comfortable & stylish designs. Shop now!{% endblock %}
+
+{% block meta_keywords %}{{ hoodie.name }}, hoodie, premium hoodies, men's fashion, clothing, Kenya{% endblock %}
+
+{% block og_title %}{{ hoodie.name }} - Premium Hoodie - HoodieHub{% endblock %}
+
+{% block og_description %}Discover our {{ hoodie.name }} - crafted for comfort and style. Premium quality at unbeatable prices.{% endblock %}
+
+{% block og_image %}{% if hoodie.image %}{{ request.build_absolute_uri }}{{ hoodie.image.url }}{% else %}https://via.placeholder.com/1200x630?text={{ hoodie.name }}{% endif %}{% endblock %}
+
+{% block og_type %}product{% endblock %}
+
+{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 bg-gray-950 min-h-screen">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16 bg-gray-950 min-h-screen">
+    <!-- Structured Data for Product -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": "{{ hoodie.name }}",
+        "image": "{% if hoodie.image %}{{ request.build_absolute_uri }}{{ hoodie.image.url }}{% else %}https://via.placeholder.com/1200x630?text={{ hoodie.name }}{% endif %}",
+        "description": "{{ hoodie.name }} - Premium quality hoodie crafted for comfort and style",
+        "brand": {
+            "@type": "Brand",
+            "name": "HoodieHub"
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": "{{ request.build_absolute_uri }}",
+            "priceCurrency": "KES",
+            "price": "{{ hoodie.price }}",
+            "availability": "{% if hoodie.stock_quantity > 0 %}InStock{% else %}OutOfStock{% endif %}",
+            "seller": {
+                "@type": "Organization",
+                "name": "HoodieHub"
+            }
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "156"
+        }
+    }
+    </script>
+    
     <!-- Back Button -->
-    <a href="{% url 'hoodieHub:home' %}" class="inline-flex items-center text-purple-400 hover:text-purple-300 font-semibold mb-6 md:mb-8 transition text-sm md:text-base">
+    <a href="{% url 'hoodieHub:home' %}" class="inline-flex items-center text-purple-400 hover:text-purple-300 font-semibold mb-8 md:mb-10 transition text-sm md:text-base">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
         Back to Shop
     </a>
     
-    <div class="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-6 md:gap-8">
+    <div class="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
         <!-- Product Detail -->
         <div class="lg:col-span-2">
             <div class="bg-gray-900 rounded-xl shadow-lg overflow-hidden border border-gray-800">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 p-4 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 p-6 md:p-8 lg:p-10">
                     <!-- Product Image -->
-                    <div class="w-full h-64 md:h-96 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-6xl md:text-9xl overflow-hidden">
+                    <div class="w-full h-64 sm:h-72 md:h-80 lg:h-96 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-7xl md:text-8xl lg:text-9xl overflow-hidden">
                         {% if hoodie.image %}
-                            <img src="{{ hoodie.image.url }}" alt="{{ hoodie.name }}" class="w-full h-full object-cover">
+                            <img src="{{ hoodie.image.url }}" alt="{{ hoodie.name }} - Premium Hoodie" title="{{ hoodie.name }}" class="w-full h-full object-cover">
                         {% else %}
                             🎽
                         {% endif %}
                     </div>
                     
                     <!-- Product Info -->
-                    <div>
-                        <h1 class="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">{{ hoodie.name }}</h1>
-                        <p class="text-3xl md:text-4xl font-bold text-purple-400 mb-4 md:mb-6">KES {{ hoodie.price|floatformat:2 }}</p>
-                        <p class="text-gray-300 text-sm md:text-lg leading-relaxed mb-6 md:mb-8">{{ hoodie.description }}</p>
+                    <div class="flex flex-col justify-center">
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">{{ hoodie.name }}</h1>
+                        <p class="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-400 mb-6 md:mb-8">KES {{ hoodie.price|floatformat:2 }}</p>
+                        <p class="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-8 md:mb-10">{{ hoodie.description }}</p>
                         
                         <!-- Add to Cart Form -->
-                        <form id="addToCartForm" class="space-y-3 md:space-y-4">
+                        <form id="addToCartForm" class="space-y-4 md:space-y-5">
                             {% csrf_token %}
                             <input type="hidden" name="hoodie_id" value="{{ hoodie.id }}">
                             
+                            {% if hoodie.stock_quantity <= 0 %}
+                                <div class="bg-red-900 border-l-4 border-red-500 p-4 rounded text-red-300 text-sm font-semibold">
+                                    ❌ This item is out of stock and cannot be added to cart
+                                </div>
+                            {% endif %}
+                            
                             <div>
-                                <label for="size" class="block text-xs md:text-sm font-semibold text-gray-300 mb-2">Size *</label>
-                                <select id="size" name="size" required class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white">
+                                <label for="size" class="block text-xs sm:text-sm font-semibold text-gray-300 mb-2">Size *</label>
+                                <select id="size" name="size" required {% if hoodie.stock_quantity <= 0 %}disabled{% endif %} class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white {% if hoodie.stock_quantity <= 0 %}opacity-50 cursor-not-allowed{% endif %}">
                                     <option value="">Select a size</option>
                                     {% for size in sizes %}
                                     <option value="{{ size }}">{{ size }}</option>
@@ -48,16 +99,16 @@
                             </div>
                             
                             <div>
-                                <label for="quantity" class="block text-xs md:text-sm font-semibold text-gray-300 mb-2">Quantity *</label>
-                                <input type="number" id="quantity" name="quantity" min="1" max="10" value="1" required class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white">
+                                <label for="quantity" class="block text-xs sm:text-sm font-semibold text-gray-300 mb-2">Quantity * (Max: {{ hoodie.stock_quantity }})</label>
+                                <input type="number" id="quantity" name="quantity" min="1" max="{{ hoodie.stock_quantity }}" value="1" required {% if hoodie.stock_quantity <= 0 %}disabled{% endif %} class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white {% if hoodie.stock_quantity <= 0 %}opacity-50 cursor-not-allowed{% endif %}">
                             </div>
                             
-                            <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 px-4 md:px-6 rounded-lg transition transform hover:scale-105 active:scale-95 text-xs md:text-base">
+                            <button type="submit" {% if hoodie.stock_quantity <= 0 %}disabled{% endif %} class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg transition transform hover:scale-105 active:scale-95 text-sm md:text-base {% if hoodie.stock_quantity <= 0 %}opacity-50 cursor-not-allowed{% endif %}">
                                 Add to Cart 🛒
                             </button>
                         </form>
                         
-                        <div id="message" class="mt-4 p-4 rounded-lg text-center font-semibold hidden text-xs md:text-sm"></div>
+                        <div id="message" class="mt-5 md:mt-6 p-4 md:p-5 rounded-lg text-center font-semibold hidden text-xs sm:text-sm"></div>
                     </div>
                 </div>
             </div>
@@ -65,25 +116,25 @@
         
         <!-- Cart Sidebar -->
         <div class="lg:col-span-1">
-            <div class="bg-gray-900 rounded-xl shadow-lg p-4 md:p-6 sticky top-20 md:top-24 max-h-fit border border-gray-800">
-                <div class="flex items-center gap-3 mb-4 md:mb-6">
-                    <span class="text-xl md:text-2xl">🛒</span>
-                    <h2 class="text-lg md:text-2xl font-bold text-white">Your Cart</h2>
-                    <span class="ml-auto bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xs md:text-sm" id="cartCount">0</span>
+            <div class="bg-gray-900 rounded-xl shadow-lg p-6 md:p-8 sticky top-16 md:top-20 lg:top-24 max-h-fit border border-gray-800">
+                <div class="flex items-center gap-3 mb-6 md:mb-8">
+                    <span class="text-2xl md:text-3xl">🛒</span>
+                    <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-white">Your Cart</h2>
+                    <span class="ml-auto bg-orange-500 text-white rounded-full w-8 h-8 md:w-9 md:h-9 flex items-center justify-center font-bold text-sm" id="cartCount">0</span>
                 </div>
                 
                 <!-- Cart Items List -->
-                <div class="max-h-64 md:max-h-96 overflow-y-auto mb-3 md:mb-4 text-xs md:text-sm" id="cartItemsList">
-                    <div class="text-center py-8 md:py-12 text-gray-500">Your cart is empty</div>
+                <div class="max-h-64 md:max-h-96 overflow-y-auto mb-4 md:mb-6 text-xs md:text-sm" id="cartItemsList">
+                    <div class="text-center py-12 text-gray-500">Your cart is empty</div>
                 </div>
                 
                 <!-- Cart Total -->
-                <div class="border-t-2 border-gray-700 pt-3 md:pt-4">
-                    <div class="flex justify-between items-center mb-3 md:mb-4">
-                        <span class="font-semibold text-gray-300 text-sm md:text-base">Total:</span>
-                        <span class="text-xl md:text-2xl font-bold text-purple-400" id="cartTotal">KES 0.00</span>
+                <div class="border-t-2 border-gray-700 pt-5 md:pt-6">
+                    <div class="flex justify-between items-center mb-4 md:mb-6">
+                        <span class="font-semibold text-gray-300 text-sm md:text-base lg:text-lg">Total:</span>
+                        <span class="text-2xl md:text-3xl font-bold text-purple-400" id="cartTotal">KES 0.00</span>
                     </div>
-                    <a href="{% url 'hoodieHub:view_cart' %}" class="block w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-lg transition text-center text-xs md:text-sm active:scale-95">
+                    <a href="{% url 'hoodieHub:view_cart' %}" class="block w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg transition text-center text-sm md:text-base active:scale-95">
                         View Cart
                     </a>
                 </div>

@@ -1,0 +1,79 @@
+{% extends 'hoodieHub/base.html' %}
+
+{% block title %}Sign Up - HoodieHub{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16 bg-gray-950 min-h-screen">
+    <div class="bg-gray-900 rounded-xl shadow-lg p-6 md:p-10 border border-gray-800">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">Join HoodieHub</h1>
+        <p class="text-sm sm:text-base text-gray-400 mb-8">Create your account to track orders and save preferences</p>
+        
+        {% if error %}
+        <div class="bg-red-900 border-l-4 border-red-500 p-4 rounded mb-6 text-red-300 text-sm font-semibold">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div class="bg-green-900 border-l-4 border-green-500 p-4 rounded mb-6 text-green-300 text-sm font-semibold">
+            {{ success }}
+        </div>
+        <div class="text-center">
+            <a href="{% url 'hoodieHub:login' %}" class="inline-block bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-lg transition transform hover:scale-105 active:scale-95">
+                Go to Login
+            </a>
+        </div>
+        {% else %}
+        
+        <form method="POST" class="space-y-5 md:space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="username" class="block text-xs sm:text-sm font-bold text-gray-300 mb-2">Username *</label>
+                <input type="text" id="username" name="username" required class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500" placeholder="Choose a username">
+            </div>
+            
+            <div>
+                <label for="email" class="block text-xs sm:text-sm font-bold text-gray-300 mb-2">Email *</label>
+                <input type="email" id="email" name="email" required class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500" placeholder="your@email.com">
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="first_name" class="block text-xs sm:text-sm font-bold text-gray-300 mb-2">First Name</label>
+                    <input type="text" id="first_name" name="first_name" class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500" placeholder="John">
+                </div>
+                <div>
+                    <label for="last_name" class="block text-xs sm:text-sm font-bold text-gray-300 mb-2">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500" placeholder="Doe">
+                </div>
+            </div>
+            
+            <div>
+                <label for="phone_number" class="block text-xs sm:text-sm font-bold text-gray-300 mb-2">Phone Number</label>
+                <input type="tel" id="phone_number" name="phone_number" class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500" placeholder="0712345678">
+            </div>
+            
+            <div>
+                <label for="password" class="block text-xs sm:text-sm font-bold text-gray-300 mb-2">Password *</label>
+                <input type="password" id="password" name="password" required class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500" placeholder="Minimum 8 characters">
+            </div>
+            
+            <div>
+                <label for="password_confirm" class="block text-xs sm:text-sm font-bold text-gray-300 mb-2">Confirm Password *</label>
+                <input type="password" id="password_confirm" name="password_confirm" required class="w-full px-4 py-3 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 transition text-sm md:text-base bg-gray-800 text-white placeholder-gray-500" placeholder="Confirm password">
+            </div>
+            
+            <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg transition transform hover:scale-105 active:scale-95 text-sm md:text-base">
+                Create Account
+            </button>
+        </form>
+        
+        <p class="text-center text-gray-400 text-xs sm:text-sm mt-6 md:mt-8">
+            Already have an account? 
+            <a href="{% url 'hoodieHub:login' %}" class="text-blue-400 hover:text-blue-300 font-bold transition">Sign In</a>
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -3,57 +3,57 @@
 {% block title %}Shopping Cart - HoodieHub{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 bg-gray-950 min-h-screen">
-    <h1 class="text-2xl md:text-4xl font-bold text-white mb-6 md:mb-8">🛒 Shopping Cart</h1>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16 bg-gray-950 min-h-screen">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-8 md:mb-12">🛒 Shopping Cart</h1>
     
     {% if cart.items.all %}
-    <div class="bg-gray-900 rounded-xl shadow-lg p-4 md:p-8 mb-6 md:mb-8 border border-gray-800">
-        <div class="space-y-3 md:space-y-4 mb-6 md:mb-8">
+    <div class="bg-gray-900 rounded-xl shadow-lg p-6 md:p-8 lg:p-10 mb-8 md:mb-12 border border-gray-800">
+        <div class="space-y-4 md:space-y-6 mb-8 md:mb-10">
             {% for item in cart.items.all %}
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between p-4 md:p-6 border-2 border-gray-800 rounded-lg bg-gray-800 hover:bg-gray-700 transition gap-3">
-                <div class="flex-1">
-                    <h3 class="text-lg md:text-xl font-bold text-white">{{ item.hoodie.name }}</h3>
-                    <p class="text-xs md:text-sm text-gray-400 mt-1">Size: <span class="font-semibold">{{ item.size }}</span></p>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between p-5 md:p-6 lg:p-7 border-2 border-gray-800 rounded-lg bg-gray-800 hover:bg-gray-700 transition gap-4 md:gap-6">
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-white truncate">{{ item.hoodie.name }}</h3>
+                    <p class="text-xs md:text-sm text-gray-400 mt-2">Size: <span class="font-semibold">{{ item.size }}</span></p>
                 </div>
                 
-                <div class="flex items-center gap-3 md:gap-6 justify-between md:justify-end">
-                    <input type="number" class="quantity-input w-14 md:w-16 px-2 md:px-3 py-2 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 text-center font-semibold text-sm md:text-base bg-gray-900 text-white" data-item-id="{{ item.id }}" value="{{ item.quantity }}" min="1" max="10">
-                    <div class="text-lg md:text-2xl font-bold text-purple-400 min-w-[100px] md:min-w-[120px] text-right">KES {{ item.get_subtotal|floatformat:2 }}</div>
-                    <a href="{% url 'hoodieHub:remove_from_cart' item.id %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition active:scale-95 text-xs md:text-sm">Remove</a>
+                <div class="flex items-center gap-4 md:gap-6 justify-between md:justify-end">
+                    <input type="number" class="quantity-input w-16 md:w-20 px-3 py-2 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 text-center font-semibold text-sm md:text-base bg-gray-900 text-white" data-item-id="{{ item.id }}" value="{{ item.quantity }}" min="1" max="10">
+                    <div class="text-lg md:text-2xl font-bold text-purple-400 min-w-[110px] md:min-w-[140px] text-right">KES {{ item.get_subtotal|floatformat:2 }}</div>
+                    <a href="{% url 'hoodieHub:remove_from_cart' item.id %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 md:py-3 px-4 md:px-5 rounded-lg transition active:scale-95 text-xs md:text-sm whitespace-nowrap">Remove</a>
                 </div>
             </div>
             {% endfor %}
         </div>
         
-        <div class="bg-gray-800 p-4 md:p-6 rounded-lg mb-6 md:mb-8 border border-gray-700">
-            <div class="flex justify-between mb-3 md:mb-4 text-base md:text-lg">
+        <div class="bg-gray-800 p-6 md:p-8 rounded-lg mb-8 md:mb-10 border border-gray-700">
+            <div class="flex justify-between mb-4 md:mb-5 text-base md:text-lg lg:text-xl">
                 <span class="text-gray-300 font-semibold">Subtotal</span>
                 <span class="text-white font-semibold">KES {{ cart.get_total|floatformat:2 }}</span>
             </div>
-            <div class="flex justify-between mb-3 md:mb-4 text-base md:text-lg">
+            <div class="flex justify-between mb-4 md:mb-5 text-base md:text-lg lg:text-xl">
                 <span class="text-gray-300 font-semibold">Shipping</span>
                 <span class="text-green-400 font-bold">Free</span>
             </div>
-            <div class="border-t-2 border-gray-700 pt-4 flex justify-between text-xl md:text-2xl">
+            <div class="border-t-2 border-gray-700 pt-5 md:pt-6 flex justify-between text-xl md:text-2xl lg:text-3xl">
                 <span class="text-white font-bold">Total</span>
                 <span class="text-purple-400 font-bold">KES {{ cart.get_total|floatformat:2 }}</span>
             </div>
         </div>
         
-        <div class="flex flex-col gap-2 md:gap-4">
-            <a href="{% url 'hoodieHub:home' %}" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-4 md:px-6 rounded-lg transition text-center active:scale-95 text-xs md:text-base">
+        <div class="flex flex-col sm:flex-row gap-3 md:gap-4">
+            <a href="{% url 'hoodieHub:home' %}" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg transition text-center active:scale-95 text-sm md:text-base">
                 Continue Shopping
             </a>
-            <a href="{% url 'hoodieHub:checkout' %}" class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 px-4 md:px-6 rounded-lg transition text-center active:scale-95 text-xs md:text-base">
+            <a href="{% url 'hoodieHub:checkout' %}" class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg transition text-center active:scale-95 text-sm md:text-base">
                 Proceed to Checkout
             </a>
         </div>
     </div>
     {% else %}
-    <div class="bg-gray-900 rounded-xl shadow-lg p-8 md:p-12 text-center border border-gray-800">
-        <h2 class="text-xl md:text-3xl font-bold text-white mb-2 md:mb-4">Your cart is empty</h2>
-        <p class="text-xs md:text-lg text-gray-400 mb-4 md:mb-8">Add some hoodies to get started!</p>
-        <a href="{% url 'hoodieHub:home' %}" class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 md:px-8 rounded-lg transition active:scale-95 text-xs md:text-base">
+    <div class="bg-gray-900 rounded-xl shadow-lg p-8 md:p-12 lg:p-16 text-center border border-gray-800">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6">Your cart is empty</h2>
+        <p class="text-sm sm:text-base md:text-lg text-gray-400 mb-8 md:mb-10">Add some hoodies to get started!</p>
+        <a href="{% url 'hoodieHub:home' %}" class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 md:py-4 px-6 md:px-10 rounded-lg transition active:scale-95 text-sm md:text-base">
             Continue Shopping →
         </a>
     </div>

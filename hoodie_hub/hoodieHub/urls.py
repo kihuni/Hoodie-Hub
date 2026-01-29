@@ -4,6 +4,15 @@ from . import views
 app_name = 'hoodieHub'
 
 urlpatterns = [
+    # SEO
+    path('sitemap.xml', views.sitemap, name='sitemap'),
+    
+    # Authentication
+    path('register/', views.register, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('profile/', views.user_profile, name='user_profile'),
+    
     # Product pages
     path('', views.home, name='home'),
     path('hoodie/<uuid:hoodie_id>/', views.hoodie_detail, name='hoodie_detail'),
@@ -23,6 +32,7 @@ urlpatterns = [
     
     # Orders
     path('order/<uuid:order_id>/', views.order_confirmation, name='order_confirmation'),
+    path('order/<uuid:order_id>/detail/', views.order_detail, name='order_detail'),
     path('order/<uuid:order_id>/status/', views.check_order_status, name='check_order_status'),
     path('order/<uuid:order_id>/receipt/', views.download_receipt, name='download_receipt'),
     

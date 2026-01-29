@@ -3,30 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}HoodieHub{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}HoodieHub - Premium quality hoodies for comfort and style. Shop our curated collection of modern hoodies with free shipping on orders over KES 5,000.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}hoodies, premium hoodies, fashion, clothing, Kenya, online shopping{% endblock %}">
+    <meta name="author" content="HoodieHub">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Open Graph Tags for Social Sharing -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}HoodieHub - Premium Hoodies{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Discover premium quality hoodies. Crafted for comfort, designed for the modern individual.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://via.placeholder.com/1200x630?text=HoodieHub{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}https://hoodieHub.com{% endblock %}">
+    <meta property="og:site_name" content="HoodieHub">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}HoodieHub - Premium Hoodies{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Discover premium quality hoodies. Crafted for comfort, designed for the modern individual.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}https://via.placeholder.com/1200x630?text=HoodieHub{% endblock %}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical_url %}https://hoodieHub.com{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🎽</text></svg>">
+    
+    <title>{% block title %}HoodieHub - Premium Quality Hoodies{% endblock %}</title>
     {% load static %}
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
         body { font-family: 'Segoe UI', system-ui, sans-serif; }
     </style>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HoodieHub",
+        "url": "https://hoodieHub.com",
+        "logo": "https://via.placeholder.com/250x250?text=HoodieHub",
+        "description": "Premium quality hoodies for comfort and style",
+        "sameAs": [
+            "https://www.facebook.com/hoodieHub",
+            "https://www.instagram.com/hoodieHub",
+            "https://twitter.com/hoodieHub"
+        ]
+    }
+    </script>
+    
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-gray-950 text-gray-100">
     <!-- Header -->
     <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 md:px-6 py-4 md:py-5 flex justify-between items-center">
-            <a href="{% url 'hoodieHub:home' %}" class="text-lg md:text-2xl font-bold hover:text-gray-100 transition">🎽 HoodieHub</a>
-            <a href="{% url 'hoodieHub:view_cart' %}" class="relative text-xl md:text-2xl hover:text-gray-100 transition active:scale-95">
-                🛒
-                <span class="absolute -top-2 -right-3 bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold" id="cartBadge">
-                    0
-                </span>
-            </a>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-5 flex justify-between items-center">
+            <a href="{% url 'hoodieHub:home' %}" class="text-xl sm:text-2xl md:text-3xl font-bold hover:text-gray-100 transition">🎽 HoodieHub</a>
+            <div class="flex items-center gap-3 md:gap-6">
+                {% if user.is_authenticated %}
+                <div class="flex items-center gap-2 md:gap-4 text-xs md:text-sm">
+                    <span class="text-gray-200">Hi, <strong>{{ user.first_name|default:user.username }}</strong></span>
+                    <a href="{% url 'hoodieHub:user_profile' %}" class="hover:text-gray-100 transition font-semibold">Profile</a>
+                    <a href="{% url 'hoodieHub:logout' %}" class="hover:text-gray-100 transition font-semibold">Logout</a>
+                </div>
+                {% else %}
+                <div class="flex items-center gap-2 md:gap-4 text-xs md:text-sm">
+                    <a href="{% url 'hoodieHub:login' %}" class="hover:text-gray-100 transition font-semibold">Sign In</a>
+                    <a href="{% url 'hoodieHub:register' %}" class="bg-green-600 hover:bg-green-700 px-3 md:px-4 py-2 rounded-lg font-semibold transition">Sign Up</a>
+                </div>
+                {% endif %}
+                <a href="{% url 'hoodieHub:view_cart' %}" class="relative text-2xl sm:text-3xl hover:text-gray-100 transition active:scale-95">
+                    🛒
+                    <span class="absolute -top-2 -right-3 bg-orange-500 text-white rounded-full w-6 h-6 md:w-7 md:h-7 flex items-center justify-center text-xs font-bold" id="cartBadge">
+                        0
+                    </span>
+                </a>
+            </div>
         </div>
     </header>
     
     {% block content %}{% endblock %}
+    
+    <!-- Newsletter Section -->
+    <section class="bg-gradient-to-r from-purple-900 to-purple-800 py-16 md:py-20 lg:py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Join Our Community</h2>
+            <p class="text-gray-200 mb-8 text-sm md:text-base lg:text-lg">Subscribe to get exclusive offers, early access to new drops, and style tips.</p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+                <input 
+                    type="text" 
+                    id="whatsappInput" 
+                    placeholder="Enter your WhatsApp number" 
+                    class="flex-1 px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base"
+                >
+                <button 
+                    onclick="subscribeWhatsApp()" 
+                    class="bg-black hover:bg-gray-900 text-white font-semibold px-6 py-3 rounded-lg transition transform hover:scale-105 active:scale-95 text-sm md:text-base"
+                >
+                    Subscribe
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12 md:py-16 lg:py-20 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Footer Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
+                <!-- Brand Section -->
+                <div class="col-span-1">
+                    <h3 class="text-2xl font-bold text-white mb-3">
+                        <span class="text-purple-400">Hoodie</span><span class="text-white">Hub</span>
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Premium hoodies for the modern individual. Comfort meets style.
+                    </p>
+                </div>
+                
+                <!-- Shop Section -->
+                <div class="col-span-1">
+                    <h4 class="text-white font-semibold mb-4 text-sm md:text-base">Shop</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="{% url 'hoodieHub:home' %}" class="hover:text-white transition">All Hoodies</a></li>
+                        <li><a href="{% url 'hoodieHub:home' %}" class="hover:text-white transition">New Arrivals</a></li>
+                        <li><a href="{% url 'hoodieHub:home' %}" class="hover:text-white transition">Best Sellers</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Support Section -->
+                <div class="col-span-1">
+                    <h4 class="text-white font-semibold mb-4 text-sm md:text-base">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="https://wa.me/254717788354" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition">Shipping Info</a></li>
+                        <li><a href="#" class="hover:text-white transition">Returns</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Legal Section -->
+                <div class="col-span-1">
+                    <h4 class="text-white font-semibold mb-4 text-sm md:text-base">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Divider -->
+            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2026 HoodieHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
     
     <script>
         // Update cart badge on page load only
@@ -45,6 +178,52 @@
         
         // Global function to update cart badge immediately after adding items
         window.updateCartBadgeImmediately = updateCartBadge;
+        
+        // WhatsApp subscription function
+        function subscribeWhatsApp() {
+            const phoneInput = document.getElementById('whatsappInput');
+            const phone = phoneInput.value.trim();
+            
+            if (!phone) {
+                alert('Please enter your WhatsApp number');
+                return;
+            }
+            
+            // Validate phone number (basic validation)
+            if (!/^\d{10,}$/.test(phone.replace(/[\s\-\+]/g, ''))) {
+                alert('Please enter a valid phone number');
+                return;
+            }
+            
+            // Format phone number for WhatsApp (assuming Kenya format)
+            let whatsappNumber = phone.replace(/[\s\-\+]/g, '');
+            if (!whatsappNumber.startsWith('254')) {
+                if (whatsappNumber.startsWith('0')) {
+                    whatsappNumber = '254' + whatsappNumber.substring(1);
+                } else {
+                    whatsappNumber = '254' + whatsappNumber;
+                }
+            }
+            
+            // WhatsApp message with subscription confirmation
+            const message = `Hi! I'd like to subscribe to HoodieHub's exclusive offers and early access to new drops.`;
+            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappURL, '_blank');
+            phoneInput.value = '';
+        }
+        
+        // Allow Enter key to subscribe
+        document.addEventListener('DOMContentLoaded', function() {
+            const whatsappInput = document.getElementById('whatsappInput');
+            if (whatsappInput) {
+                whatsappInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        subscribeWhatsApp();
+                    }
+                });
+            }
+        });
     </script>
     
     {% block extra_js %}{% endblock %}

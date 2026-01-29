@@ -84,6 +84,4 @@ yarn-error.log
 # Static files (collected)
 /staticfiles/*
 !staticfiles/.gitkeep
-.md
-MOBILE_RESPONSIVE_UPDATES.md
-TAILWIND_CONVERSION_SUMMARY.md
+*.md
